@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurant-OS — Open-Source Restaurant, Cafe & Cloud Kitchen Operating System</title>
+  <meta name="description" content="Restaurant-OS: Zero-commission digital QR menu, live kitchen display system (KDS), GST invoicing, and direct UPI settlement for modern food businesses.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07090e;
+      --card: #0f131d;
+      --subtle: #171d2b;
+      --border: #222b3d;
+      --text: #f0f4fc;
+      --muted: #8c9cb6;
+      --orange: #ff7828;
+      --green: #10b981;
+      --cyan: #00f0ff;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.5; padding: 0 16px; }
+    .container { max-width: 1240px; margin: 0 auto; }
+
+    /* Header & Sponsor Bar */
+    header { padding: 20px 0; border-bottom: 1px solid var(--border); }
+    .nav { display: flex; justify-content: space-between; align-items: center; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; }
+    .brand-logo { width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, var(--orange), #f59e0b); display: flex; align-items: center; justify-content: center; font-size: 18px; color: #000; }
+    
+    .sponsor-bar {
+      margin-top: 14px;
+      padding: 10px 16px;
+      background: linear-gradient(90deg, rgba(255,120,40,0.12), rgba(16,185,129,0.08));
+      border: 1px solid rgba(255,120,40,0.3);
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+    .sponsor-bar a { color: var(--orange); text-decoration: none; font-weight: 600; }
+
+    /* Hero */
+    .hero { padding: 40px 0 24px; text-align: center; }
+    .hero h1 { font-size: 44px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; }
+    .gradient-text { background: linear-gradient(135deg, #ffffff 40%, var(--orange) 80%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--muted); font-size: 16px; max-width: 640px; margin: 0 auto 24px; }
+
+    /* View Switcher Tabs */
+    .tab-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 30px; }
+    .tab-btn { padding: 10px 20px; background: var(--card); border: 1px solid var(--border); color: var(--text); font-weight: 600; font-size: 14px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+    .tab-btn.active { background: var(--orange); color: #000; border-color: var(--orange); }
+
+    /* Layout Grids */
+    .view-panel { display: none; }
+    .view-panel.active { display: block; }
+    .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+    .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+
+    /* Dish Card */
+    .dish-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; justify-content: space-between; }
+    .dish-info h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .dish-desc { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .dish-price { font-family: var(--mono); font-size: 14px; color: var(--green); font-weight: 700; }
+    .btn-add { align-self: flex-end; padding: 6px 14px; background: var(--subtle); border: 1px solid var(--border); color: var(--text); font-weight: 700; border-radius: 6px; cursor: pointer; }
+    .btn-add:hover { background: var(--orange); color: #000; border-color: var(--orange); }
+
+    /* Cart & Bill Box */
+    .side-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .order-item-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; border-bottom: 1px dashed var(--border); padding-bottom: 6px; }
+    .btn-act { width: 100%; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; margin-top: 12px; }
+    .btn-primary { background: var(--orange); color: #000; }
+    .btn-success { background: var(--green); color: #000; }
+
+    /* KDS Ticket Grid */
+    .kds-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .kds-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .kds-card.warning { border-color: #f59e0b; }
+    .kds-card.critical { border-color: #ef4444; }
+
+    footer { border-top: 1px solid var(--border); margin-top: 60px; padding: 30px 0 50px; font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; }
+
+    @media (max-width: 860px) {
+      .grid-2, .menu-grid, .kds-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="nav">
+        <div class="brand">
+          <div class="brand-logo">🍽️</div>
+          <div>Restaurant-OS <span style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:20px; background:rgba(255,120,40,0.15); color:var(--orange);">Open-Source</span></div>
+        </div>
+        <a href="https://github.com/1nsharma-labs/restaurant-os" target="_blank" style="color:var(--text); text-decoration:none; font-size:14px; font-weight:600;">GitHub Repository &rarr;</a>
+      </div>
+
+      <div class="sponsor-bar">
+        <div>
+          📢 <strong>Sponsorship Slot:</strong> Reach 25,000+ Restaurants, Cafes & Cloud Kitchens across India.
+        </div>
+        <a href="mailto:amitsharma9976@gmail.com?subject=Sponsor%20Restaurant-OS">Book Slot &rarr;</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <h1>
+        The Zero-Commission <br>
+        <span class="gradient-text">Restaurant & Cloud Kitchen OS</span>
+      </h1>
+      <p>
+        Digital QR Menus, Table Ordering, Live Kitchen Display System (KDS), GST Billing & Direct UPI Settlement.
+      </p>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchView('menuView')">📱 Customer QR Menu & Order</button>
+        <button class="tab-btn" onclick="switchView('kdsView')">🔥 Kitchen Display (KDS)</button>
+        <button class="tab-btn" onclick="switchView('billingView')">🧾 GST & UPI Settlement</button>
+      </div>
+    </section>
+
+    <!-- VIEW 1: QR Menu & Table Ordering -->
+    <div id="menuView" class="view-panel active">
+      <div class="grid-2">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3 style="font-size:18px;">Live Menu &bull; Table T-04</h3>
+            <span style="font-size:12px; color:var(--muted);">Zero login required</span>
+          </div>
+
+          <div class="menu-grid">
+            <div class="dish-card">
+              <div class="dish-info">
+                <h4>🟢 Paneer Butter Masala</h4>
+                <div class="dish-desc">Cottage cheese cubes in rich butter cashew gravy.</div>
+                <div class="dish-price">₹280</div>
+              </div>
+              <button class="btn-add" onclick="addToCart('Paneer Butter Masala', 280)">+ Add</button>
+            </div>
+
+            <div class="dish-card">
+              <div class="dish-info">
+                <h4>🟢 Dal Makhani</h4>
+                <div class="dish-desc">Slow-cooked black lentils simmered with fresh cream.</div>
+                <div class="dish-price">₹220</div>
+              </div>
+              <button class="btn-add" onclick="addToCart('Dal Makhani', 220)">+ Add</button>
+            </div>
+
+            <div class="dish-card">
+              <div class="dish-info">
+                <h4>🟢 Butter Garlic Naan</h4>
+                <div class="dish-desc">Tandoor-baked flatbread infused with minced garlic.</div>
+                <div class="dish-price">₹60</div>
+              </div>
+              <button class="btn-add" onclick="addToCart('Butter Garlic Naan', 60)">+ Add</button>
+            </div>
+
+            <div class="dish-card">
+              <div class="dish-info">
+                <h4>🔴 Chicken Dum Biryani</h4>
+                <div class="dish-desc">Fragrant basmati rice layered with spiced chicken.</div>
+                <div class="dish-price">₹340</div>
+              </div>
+              <button class="btn-add" onclick="addToCart('Chicken Dum Biryani', 340)">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="side-box">
+          <h3 style="font-size:16px; margin-bottom:12px;">🛒 Table T-04 Order Cart</h3>
+          <div id="cartItems" style="min-height:120px; font-size:13px; color:var(--muted);">
+            No items added yet. Click "+ Add" on any dish.
+          </div>
+          <div style="border-top:1px solid var(--border); padding-top:10px; margin-top:10px; display:flex; justify-content:space-between; font-weight:700;">
+            <span>Subtotal:</span>
+            <span id="cartSubtotal" style="color:var(--green); font-family:var(--mono);">₹0</span>
+          </div>
+          <button class="btn-act btn-primary" onclick="placeOrder()">Place Order & Send to KDS</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: Kitchen Display System (KDS) -->
+    <div id="kdsView" class="view-panel">
+      <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+        <h3 style="font-size:18px;">🔥 Kitchen Display System (KDS) Active Tickets</h3>
+        <span style="color:var(--muted); font-size:13px;">Auto-refreshes every 2s</span>
+      </div>
+
+      <div class="kds-grid" id="kdsGrid">
+        <div class="kds-card">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <strong style="color:var(--orange);">KDS-ORD-101</strong>
+            <span style="font-family:var(--mono); font-size:11px;">Table: T-04</span>
+          </div>
+          <div style="font-size:13px; margin-bottom:12px;">
+            <div>&bull; 1x Paneer Butter Masala</div>
+            <div>&bull; 2x Butter Garlic Naan</div>
+          </div>
+          <button class="btn-act btn-success" style="padding:6px; font-size:12px;" onclick="bumpTicket(this)">Mark Prepared (Bump)</button>
+        </div>
+
+        <div class="kds-card warning">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <strong style="color:#f59e0b;">KDS-ORD-102</strong>
+            <span style="font-family:var(--mono); font-size:11px;">Table: T-02 (12m)</span>
+          </div>
+          <div style="font-size:13px; margin-bottom:12px;">
+            <div>&bull; 2x Chicken Dum Biryani</div>
+            <div>&bull; 1x Gulab Jamun (2 Pcs)</div>
+          </div>
+          <button class="btn-act btn-success" style="padding:6px; font-size:12px;" onclick="bumpTicket(this)">Mark Prepared (Bump)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: GST & Direct UPI Settlement -->
+    <div id="billingView" class="view-panel">
+      <div class="grid-2">
+        <div class="side-box">
+          <h3 style="font-size:18px; margin-bottom:14px;">🧾 GST Invoice Generator</h3>
+          <div style="font-family:var(--mono); font-size:13px; background:var(--bg); border:1px solid var(--border); padding:16px; border-radius:8px;">
+            <div>Invoice No  : <strong>INV-101-2026</strong></div>
+            <div>Table No    : <strong>T-04</strong></div>
+            <div style="margin:10px 0; border-top:1px dashed var(--border); padding-top:6px;">
+              <div>1x Paneer Butter Masala : ₹280</div>
+              <div>2x Butter Garlic Naan   : ₹120</div>
+            </div>
+            <div>Subtotal    : ₹400.00</div>
+            <div>CGST (2.5%) : ₹10.00</div>
+            <div>SGST (2.5%) : ₹10.00</div>
+            <div style="font-weight:700; color:var(--green); font-size:15px; margin-top:8px;">Grand Total : ₹420.00 INR</div>
+          </div>
+        </div>
+
+        <div class="side-box" style="text-align:center;">
+          <h3 style="font-size:18px; margin-bottom:14px;">📱 Direct UPI Settlement (0% Fee)</h3>
+          <div style="background:#fff; padding:16px; border-radius:8px; display:inline-block; margin-bottom:12px;">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=6393741171@upi%26pn=Amit%20Sharma%26am=420%26cu=INR" alt="UPI QR" width="160" height="160">
+          </div>
+          <div style="font-family:var(--mono); font-size:13px; color:var(--orange);">
+            Payee UPI: <strong>6393741171@upi</strong>
+          </div>
+          <p style="font-size:12px; color:var(--muted); margin-top:6px;">Scan with PhonePe, Google Pay, or Paytm &bull; Instant Settlement</p>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div>
+        ⚡ <strong>Restaurant-OS</strong> &bull; Conceived & built by <strong>Amit Sharma (@1nsharma)</strong> in Kanpur, India
+      </div>
+      <div>
+        Direct UPI: <strong style="color:var(--orange); font-family:var(--mono);">6393741171@upi</strong> | Email: <a href="mailto:amitsharma9976@gmail.com" style="color:var(--cyan); text-decoration:none;">amitsharma9976@gmail.com</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    let cart = [];
+
+    function switchView(viewId) {
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function addToCart(name, price) {
+      cart.push({ name, price });
+      renderCart();
+    }
+
+    function renderCart() {
+      const c = document.getElementById('cartItems');
+      const s = document.getElementById('cartSubtotal');
+      if (cart.length === 0) {
+        c.innerHTML = 'No items added yet.';
+        s.innerText = '₹0';
+        return;
+      }
+      let sub = 0;
+      c.innerHTML = cart.map((item, idx) => {
+        sub += item.price;
+        return `<div class="order-item-row"><span>${item.name}</span><span>₹${item.price}</span></div>`;
+      }).join('');
+      s.innerText = '₹' + sub;
+    }
+
+    function placeOrder() {
+      if (cart.length === 0) return alert('Please add items to cart first.');
+      alert('Order ORD-103 Dispatched to Kitchen Display System (KDS)!');
+      cart = [];
+      renderCart();
+    }
+
+    function bumpTicket(btn) {
+      btn.innerText = '✅ Served';
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "name": "restaurant-os",
+  "version": "1.0.0",
+  "description": "The Open-Source Restaurant, Cafe & Cloud Kitchen Operating System — Zero-Commission QR Menu, KDS, WhatsApp Bot & Direct UPI Billing",
+  "type": "module",
+  "main": "core/src/menu.js",
+  "bin": {
+    "restaurant-os": "./cli/bin/restaurant.js"
+  },
+  "scripts": {
+    "start": "node cli/bin/restaurant.js status",
+    "test": "node --test test/test_restaurant.js",
+    "mcp": "node core/src/mcp/server.js"
+  },
+  "keywords": [
+    "restaurant-pos",
+    "cloud-kitchen",
+    "qr-menu",
+    "kds",
+    "kitchen-display-system",
+    "gst-invoicing",
+    "upi-payment",
+    "mcp-server"
+  ],
+  "author": "Amit Sharma <amitsharma9976@gmail.com> (https://github.com/1nsharma)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1nsharma-labs/restaurant-os.git"
+  },
+  "homepage": "https://1nsharma-labs.github.io/restaurant-os/",
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://polar.sh/1nsharma-labs"
+    },
+    {
+      "type": "upi",
+      "url": "upi://pay?pa=6393741171@upi&pn=Amit%20Sharma"
+    }
+  ]
+}
