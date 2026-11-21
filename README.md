@@ -25,7 +25,7 @@
 > [!NOTE]
 > **Live Auto-Sponsorship Slot Available:**
 > Reach 25,000+ restaurant owners, cloud kitchen operators, and F&B entrepreneurs across India.
-> **Book Slot:** Email [amitsharma9976@gmail.com](mailto:amitsharma9976@gmail.com) | Direct UPI: `6393741171@upi`
+> **Book Slot:** Email [tech@mowglai.com](mailto:tech@mowglai.com) | Direct UPI: `6393741171@upi`
 
 ---
 
@@ -104,7 +104,7 @@ Exposed MCP Tools:
 
 Built by **Amit Sharma (@1nsharma)** from **Kanpur, India**.
 
-- **Personal Email:** [amitsharma9976@gmail.com](mailto:amitsharma9976@gmail.com)
+- **Personal Email:** [tech@mowglai.com](mailto:tech@mowglai.com)
 - **Direct UPI & Bank Transfer:** `6393741171@upi` &bull; PhonePe / Google Pay / Paytm: `6393741171`
 - **Global Sponsorship:** [polar.sh/1nsharma-labs](https://polar.sh/1nsharma-labs) &bull; [GitHub Sponsors](https://github.com/sponsors/1nsharma)
 - **Organization:** [github.com/1nsharma-labs](https://github.com/1nsharma-labs)
